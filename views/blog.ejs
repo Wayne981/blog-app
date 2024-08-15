@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('./partials/head') %>
+    <title><%= blog.title %> | Blog</title>
+    <style>
+      /* Custom Styling */
+      .blog-cover-image {
+        width: 100%;
+        max-width: 600px; /* Reduce the width of the image */
+        height: auto;
+        margin: 20px 0;
+        border-radius: 8px;
+      }
+      .author-info img {
+        border-radius: 50%;
+      }
+      .comment {
+        margin-bottom: 20px;
+      }
+      .comment img {
+        border-radius: 50%;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('./partials/nav') %>
+
+    <div class="container mt-5">
+      <div>
+        <h1 class="display-4"><%= blog.title %></h1>
+        <img src="<%= blog.coverImageURL %>" class="blog-cover-image" alt="Blog Cover Image" />
+        <p class="lead"><%= blog.body %></p>
+      </div>
+
+      <div class="d-flex align-items-center mb-4 author-info">
+        <img src="<%= blog.createdBy.profileImageURL %>" class="me-3" width="40px" alt="Author Image" />
+        <h5 class="m-0"><%= blog.createdBy.fullName %></h5>
+      </div>
+
+      <div class="comments-section">
+        <h2>Comments (<%= comments.length %>)</h2>
+        <% if (locals.user) { %>
+          <form action="/blog/comment/<%= blog._id %>" method="post" class="mb-4">
+            <div class="input-group mb-3">
+              <input
+                type="text"
+                name="content"
+                class="form-control"
+                placeholder="Enter your comment"
+                required
+              />
+              <button class="btn btn-primary" type="submit">Add Comment</button>
+            </div>
+          </form>
+        <% } %>
+
+        <div class="comments-list">
+          <% if (comments && comments.length > 0) { %>
+            <% comments.forEach(comment => { %>
+              <div class="comment p-3 bg-light rounded">
+                <div class="d-flex align-items-center mb-2">
+                  <img src="<%= comment.createdBy.profileImageURL %>" width="40px" alt="Commenter Image" class="me-2" />
+                  <strong><%= comment.createdBy.fullName %></strong>
+                </div>
+                <p class="mb-0"><%= comment.content %></p>
+              </div>
+            <% }) %>
+          <% } else { %>
+            <p>No comments yet. Be the first to comment!</p>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <%- include('./partials/scripts') %>
+  </body>
+</html>
+
+
+
+
+
+ <!-- if condition because , comment can only be made , when user is logged in  -->
+  <!-- with that local is user  -->
